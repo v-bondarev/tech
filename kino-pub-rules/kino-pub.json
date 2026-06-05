@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "rules": [
+    {
+      "domain_suffix": [
+        "kino.pub",
+        "www.kino.pub",
+        "m.kino.pub",
+        "api.kino.pub",
+        "static.kino.pub",
+        "cdn.kino.pub",
+        "img.kino.pub",
+        "video.kino.pub",
+        "player.kino.pub",
+        "stream.kino.pub",
+        "files.kino.pub",
+        "assets.kino.pub"
+      ]
+    }
+  ]
+}
