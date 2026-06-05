@@ -1,0 +1,40 @@
+name: Build and Release sing-box rule-set
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get latest sing-box version
+        id: singbox
+        run: |
+          VERSION=$(curl -fsSL https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r .tag_name)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Download sing-box
+        run: |
+          curl -fsSL -o sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/${{ steps.singbox.outputs.version }}/sing-box-${{ steps.singbox.outputs.version }}-linux-amd64.tar.gz"
+          tar -xzf sing-box.tar.gz
+          mv sing-box-${{ steps.singbox.outputs.version }}-linux-amd64/sing-box ./sing-box
+          chmod +x ./sing-box
+
+      - name: Compile rule-set
+        run: |
+          ./sing-box rule-set compile --output kino-pub.srs kino-pub.json
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: kino-pub.srs
+          generate_release_notes: true
